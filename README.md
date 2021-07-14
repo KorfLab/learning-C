@@ -21,7 +21,7 @@ An introduction to programming in C using example programs.
 
 ## Setup ##
 
-You will need `git`, `gcc`', and `make` on your computer. If these are not installed, you will have to install them yourself.
+You will need `git`, `gcc`, and `make` on your computer. If these are not installed, you will have to install them yourself.
 
 1. Clone this repository to your computer. `git clone https://github.com/KorfLab/learning-C`
 2. Make a directory for yourself. Do all of your work inside that directory.
