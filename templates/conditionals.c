@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 int main() {
 	int a = 1;
@@ -28,6 +29,12 @@ int main() {
 	}
 	printf("done with j\n");
 	printf("j = %d\n", j); // j still exists, which can be bad for debugging
+	
+	// let's loop over letters of DNA for fun
+	char dna[5] = "ACGT";
+	for (int i = 0; i < strlen(dna); i++) {
+		printf("%d %c\n", i, dna[i]);
+	}
 	
 	// the while loop should look familiar
 	while (1) { // this is a never-ending loop

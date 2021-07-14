@@ -12,13 +12,14 @@ An introduction to programming in C using example programs. It is assumed you've
 + Strings
 + Conditionals
 + Structs
-+ Pointers
-+ Arrays
 + Functions
++ Arrays
++ Pointers
 + File I/O
 + CLI
-+ Make
 + Libraries
++ Make
+
 
 ## Setup ##
 
@@ -101,5 +102,37 @@ You have asked for 5 bytes to hold a string, s. However, the array syntax allows
 Copy `templates/conditionals.c` to your directory and try that out. Most of it should look pretty familiar to you. You may not have seen a `case` or `do` or `goto` statement before, but they aren't complicated.
 
 To get your fingers used to doing loops and conditionals in C, write the ubiquitous `fizzbuzz` program (output the numbers from 1 to 100, but if the number is divisible by 3 write fizz, divisible by 5 write buzz, divisible by both 3 and 5 fizzbuzz).
+
+## Structs ##
+
+Structures, or 'structs' for short are collections of variables all stored together. Sometimes structs are called objects. The basic form of a struct is as follows:
+
+	struct person {
+		char name[32];
+		int age;	
+	};
+
+That is, each property of a struct has an identifier (e.g. name, age) and a variable type (e.g. char array, integer). To get to a specific property of a struct, you use dot syntax as in `variable.name` and `variable.age`.
+
+## Functions ##
+
+## Arrays ##
+
+Stack arrays
+
+## Pointers ##
+
+Pointers to simple types
+malloc() and free()
+Pointers to structs
+Stack vs. heap
+
+## File I/O ##
+
+## CLI ##
+
+## Libraries ##
+
+## Make ##
 
 

@@ -32,5 +32,14 @@ int main() {
 	char *s3 = "ACGT"; // strings created like this are read-only
 	printf("%d == %d?\n", strlen(s3), sizeof(s3)); // and not as long
 	
+	// making interesting strings
+	char strbuff[64];                           // create a string buffer
+	sprintf(strbuff, "%s %.3f", "PI-ish", 3.14159); // then sprintf()
+	printf("%s\n", strbuff);
+	
+	// copying strings
+	strcpy(strbuff, "overwritten"); // you can copy one string into another
+	printf("%s\n", strbuff);
+	
 }
 
