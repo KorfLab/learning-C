@@ -28,7 +28,7 @@ You will need `git`, `gcc`, and `make` on your computer. If these are not instal
 
 ## Hello World ##
 
-Open your favorite editor and create the following program. You can find this program in the `templates` directory of the repository in case you would rather copy than type.
+Open your favorite editor and create the following program: `hello_world.c`. You can find this program in the `templates` directory of the repository in case you would rather copy than type.
 
 	#include <stdio.h>
 	int main() {
