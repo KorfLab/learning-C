@@ -1,7 +1,7 @@
 C for Python programmers
 ========================
 
-Python is a great language for 95% of my programming needs. Sometimes it's not fast enough, and for those times there is C. This repo chronicles the KorfLab Summer 2021 adventures in C.
+Python is a great language for 95% of our programming needs. Sometimes it's not fast enough, and for those times there is C. This repo chronicles the "adventures in C" of the Korf Lab in the Summer of 2021.
 
 ## Contents ##
 
@@ -22,7 +22,6 @@ Python is a great language for 95% of my programming needs. Sometimes it's not f
 + Make
 + Libraries
 + Pseudo-OOP
-
 
 ## Setup ##
 
@@ -193,14 +192,13 @@ If you're worried about polluting the global namespace with your variables and f
 
 The variable `Mine` cannot be reached by any piece of code that isn't in the same file where `Mine` is defined. It isn't part of the global namespace.
 
-
 ## Pointers ##
 
-Pointers to simple types
+Pointers to scalars
 malloc() and free()
-Pointers to structs
 Stack vs. heap
-Heap arrays
+Pointers as arrays
+Pointers to structs
 
 ## File I/O ##
 
@@ -213,8 +211,4 @@ Heap arrays
 ## Libraries ##
 
 ## Pseudo-OOP ##
-
-
-
-
 
