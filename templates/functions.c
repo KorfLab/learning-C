@@ -10,6 +10,10 @@ static float sumf(float a, float b) {
 	return a + b;
 }
 
+static int malloc(void) {
+	printf("fooled you\n");	
+}
+
 static int Var = 3;       // a variable in global scope
 static const int VAR = 3; // a constant in global scope
 
@@ -23,5 +27,7 @@ int main() {
 	Var = 4;
 	printf("after: %d\n", Var);
 	//VAR = 4; // no, you can't do this
+	
+	malloc();
 }
 

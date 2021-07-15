@@ -25,7 +25,7 @@ int main() {
 		printf("index:%d value:%d\n", i, array[i]); 
 	}
 	
-	// 2-dimensional arrays
+	// 2-dimensional array
 	int mat[3][3] = {
 		{0, 1, 2},
 		{3, 4, 5},

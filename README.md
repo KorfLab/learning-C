@@ -1,7 +1,7 @@
-learning-C
-==========
+C for Python programmers
+========================
 
-An introduction to programming in C using example programs. It is assumed you've done some programming in Python, Perl, Javascript, or some other modern programming language.
+Python is a great language for 95% of my programming needs. Sometimes it's not fast enough, and for those times there is C. This repo chronicles the KorfLab Summer 2021 adventures in C.
 
 ## Contents ##
 
@@ -13,13 +13,15 @@ An introduction to programming in C using example programs. It is assumed you've
 + Conditionals
 + Structs
 + Functions
++ Scope
 + Arrays
 + Pointers
 + File I/O
 + CLI
 + Headers
-+ Libraries
 + Make
++ Libraries
++ Pseudo-OOP
 
 
 ## Setup ##
@@ -38,7 +40,13 @@ Open your favorite editor and create the following program: `hello_world.c`. You
 		printf("hello world\n");
 	}
 
-Compile the program.
+Some big differences from Python include the following:
+
++ Every statement ends in a semicolon
++ Curly brackets define scope rather than indentation
++ There are weird things like #include statements
+
+Time to compile the program.
 
 	gcc hello_world.c
 
@@ -53,16 +61,21 @@ You can name your programs with the `-o` option.
 	gcc hello_world.c -o greeting
 	./greeting
 
+Or you can just use `a.out` for these demo programs. The file will be ignored by `git` because it's in the `.gitignore` file. Here's how I would go about compiling and running the demo programs (this only runs the program if the compiler returns 0 -- success).
+
+	gcc hello_world.c && ./a.out
+
 ## Comments ##
 
 There are 2 styles of comments in C, multi-line comments, and single-line comments.
 
 	/*
-		a multi-line comment begins with slash-star
-		and ends with star-slash
+		A multi-line comment begins with slash-star and ends with star-slash
+		This is useful for commenting-out large blocks of code
+		So, use this much as you would triple-quotes in Python
 	*/
 
-In the classic version of C, the only kind of comments were multi-line. Of course, you could put them on one line. But now, most C-compilers also recognize single-line comments, which were introduced in C++.
+In the classic version of C, the only kind of comments were multi-line. Of course, you could put them on one line. But now, most C-compilers also recognize single-line comments, which were introduced in C++ (maybe).
 
 	/* single-line comment the old way */
 	// single-line comment the new way
@@ -77,13 +90,11 @@ In C, all variables are strictly typed. You cannot create a variable and decide 
 
 Copy the `variables.c` program from `templates` to your directory. Compile and run that. Then add your own variables and your own `printf()` statements.
 
-Note that this program added a couple new things. First off there was the `#include <math.h>` that is used to bring in definitions of PI. Also, the `printf()` statement has a few new ways of being used.
+Note that this program added a couple new things. First off there was the `#include <math.h>` that is used to bring in a definition of PI. Also, the `printf()` statement has a few new ways of being used.
 
-Possibly the most important part of this program is to note that variables a, b, and c were never given any value. And yet when the program runs, they have a value. Varibles in C are just raw memory locations. When you declare a variable, you're getting whatever cruft was left in memory at that location. Each time you run your program, you may have a different value.
+Possibly the most important part of this program is to note that variables a, b, and c were never given any value. There is no `None` type in C. When the program runs, all variables have a value. Varibles in C are just raw memory locations. When you declare a variable, you're getting whatever cruft was left in memory at that location from some earlier point in time. Each time you run your program, you may have a different value!
 
-Try declaring some floating point variables and then print their values. You might be surprised at the results.
-
-So what should you do about variables with unknown contents? Should you set all of your variables equal to zero at the start of your program? Absolutely not. A program with random behavior is obviously a buggy program. However, if you set the variables to zero, it's probably still a buggy program but you can't tell because it doesn't have random behavior.
+So what should you do about variables with unknown contents? Should you set all of your variables equal to zero at the start of your program? Absolutely not. A program with random behavior is obviously a buggy program. However, if you set the variables to zero, it's probably still a buggy program but you can't tell because it behaves consistently.
 
 ## Strings ##
 
@@ -98,7 +109,7 @@ The most dangerous thing about strings, and arrays in general is that there's ab
 
 You have asked for 5 bytes to hold a string, s. However, the array syntax allows you to read or write memory well beyond the original bounds. This can cause catastrophic errors if you disturb other parts of memory. If this doesn't scare the shit out of you, you don't understand the problem.
 
-Depending on what version of the gcc compiler you used, you may have seen warning messages. One of those warnings may be because the code implicitly converts one type of integer into another.
+Depending on what version of the gcc compiler you used, you may have seen warning messages when you compiled `strings.c`. One of those warnings may be because the code implicitly converts one type of integer into another.
 
 	printf("len:%d size:%d\n", strlen(s2), sizeof(s2));
 
@@ -107,11 +118,13 @@ The `strlen()` and `sizeof()` functions return unsigned integers while the `prin
 	printf("len:%d size:%d\n", (int)strlen(s2), (int)sizeof(s2));
 	printf("len:%lu size:%lu\n", strlen(s2), sizeof(s2));
 
-Ideally, your code shoudln't produce any warnings ever. However, not all compilers generate the same warnings. So sometimes you have to compile on multiple platforms to find your warnings and errors. Having to compile your code everywhere is a pain. This was largely solved by Java, which you only had to compile once. However, since evey Java interpreter was different, it spawned the phrase "compile once, debug everywhere". It amounts to the same thing: programming in C or Java requires simultaneously developing on multiple platforms.
+Ideally, your code shouldn't produce any warnings, ever. However, not all compilers generate the same warnings. So sometimes you have to compile on multiple platforms to find your warnings and errors. Having to compile your code everywhere is a pain. This was largely solved by Java, which you only had to compile once. However, since evey Java interpreter was different, it spawned the phrase "compile once, debug everywhere". It amounts to the same thing: developing on multiple platforms makes software more robust. I am currently using Mac OS, Debian, Linux Mint, and Haiku.
+
+Later, when we work with makefiles, we'll use compiler options that turn on as many warnings as possible to make our code as squeaky-clean as possible.
 
 ## Conditionals ##
 
-Copy `templates/conditionals.c` to your directory and try that out. Most of it should look pretty familiar to you. You may not have seen a `case` or `do` or `goto` statement before, but they aren't complicated.
+Copy `templates/conditionals.c` to your directory and try that out. Most of it should look pretty familiar to you. Python doesn't have `case`, `do`, or `goto` statements, but they aren't complicated.
 
 To get your fingers used to doing loops and conditionals in C, write the ubiquitous `fizzbuzz` program (output the numbers from 1 to 100, but if the number is divisible by 3 write fizz, divisible by 5 write buzz, divisible by both 3 and 5 fizzbuzz).
 
@@ -124,32 +137,61 @@ Structures, or 'structs' for short are collections of variables all stored toget
 		int age;	
 	};
 
-That is, each property of a struct has an identifier (e.g. name, age) and a variable type (e.g. char array, integer). To get to a specific property of a struct, you use dot syntax as in `variable.name` and `variable.age`. Later, we will use pointers to structs which will have a similar but distinct representation: `variable->name` and `variable->age`.
+That is, each property of a struct has an identifier (e.g. name, age) and a variable type (e.g. char array, integer). To get to a specific property of a struct, you use dot syntax as in `variable.name` and `variable.age`. This all looks like object-oriented programming in Python. However, most of the time the objects don't bind to functions. So you will see `obj.name` but you will very rarely see `obj.method()` (although I do this on occasion).
+
+Later, we will use pointers to structs which uses the arrow representation: `variable->name` and `variable->age`. If you are a Perl programmer, this may give you a warm, fuzzy feeling.
 
 ## Arrays ##
 
-Arrays are linear collections of variables all of the same type. In C, arrays have a fixed size when they are created. As such, there are no functions to append or push data onto them. They cannot grow and they don't know how many elements you have decided to use. You have to manage their size and keep track of how much of the array is currently in use.
+In Python, lists can contain variables of mixed types, but not in C. All of the elements of a C array must be of the same type. Not only that, but when you create an array, you must say exactly how large you want it to be. As such, there is no `append()` function. C arrays cannot grow and they don't know how many elements you have decided to use. You have to manage their size and keep track of how much of the array is currently in use.
 
 As we saw earlier with strings (which are arrays of type char terminated with `\0`), it is possible to accidentally access arrays beyond their final index. This is probably the most common type of catastrophic error.
 
 ## Functions ##
 
-This is unfinished...
+In Python, functions can return multiple values, but in C every function has at most one return value. For example, the `main()` function returns an integer.
 
-First, a word about scope. The scope of a variable is where it is visible. Most modern languages don't use global scope very much. However, in C, all of the functions are generally in global scope. That means you can't have two different functions with the same name coming from different libraries. You also can't have global variables with the same name.
+	int main() {...}
 
-In many modern languages, each package has its own namespace. If you want to define `printf()` in a specific namespace, there's nothing preventing you from doing that as `mypackage.printf()`. However, in C, you cannot do this. Every function has to have a unique name. For this reason, developers often put a unique-ish prefix on the front of their functions. For example, I might use my initials to make `ik_printf()`. Another way to prevent your global variables from colliding with other global variables and functions is to declare them as `static`.
+If you don't want a function to return anything, you can have it return void.
 
+	void function() {...}
 
-In C, functions always have exactly one return value. For example, if you have a function called `sum()` that takes two numbers, you would expect that it would return the sum of those numbers. You would also expect that it didn't change those numbers in any way. Put another way, functions do this:
+So what happens if you want a function to return multiple values? For example, let's say you have a `stats()` function that should return the min, max, mean, median, etc. How do you get the individual values? Simple: return a struct.
 
-+ have a single return value
-+ have no side-effects (don't change their input values)
+	s = stats(values);
+	s.max
+	s.mean
 
+There is another way, which is to send in memory locations to the function and have the function fill the variables. This violates my "functions don't have side-effects" rule. Passing memory addresses to functions is pure evil (even though it shows up in most textbooks).
 
+## Scope ##
 
+At some point in the too distant future, we will be compiling programs that contain multiple files. For example, let's imagine there is a library that defines functions for `sum()` and `product()`. We want to combine this with our program containing functions `max()` and `main()`.
 
-What if you want a function to return multiple values? For example, let's say you have a `stats()` function that should return the min, max, mean, median, etc. There's more than one way to accomplish this. One way is to send in the memory locations of the variables you want to set.
++ some_library.c
+	+ int sum(int a, int b) return a + b;
+	+ int product(int a, int b) return a * b;
++ program.c
+	+ int max(int a, int b) return a > b ? b : a;
+	+ int main() {...}
+
+In Python, each file has its own namespace. For example, you might do `some_library.sum()`. In C, there is no dot syntax that divides the namespace. In C, all of the functions are in the same global namespace. This means that each function needs a completely unique name. Consequently develoeprs often prefix their functions with their initials or some other identifying token. For example, if I wanted to make my own version of `printf()`, I might call it `ik_printf()` or if this was part of a larger biological sequences library I might call it `bs_printf()`.
+
+You can also declare variables in the global namespace. But just like functions, they cannot have the same names as other variables (or functions for that matter). By convention, global variables should start with a capital letter. If you want to make a variable a constant, use the `const` keyword. By convention, it should also be in all capitals.
+
+	int GlobalVariable = 3;        // can be changed
+	const int GLOBAL_CONSTANT = 5; // cannot be changed
+
+	int main () {
+		int thing; // lowercase as all local variables should be	
+	}
+
+If you're worried about polluting the global namespace with your variables and functions (and you should be), you can make these private to a specific file with the keywords `static`.
+
+	static int Mine; // global and private to the file
+
+The variable `Mine` cannot be reached by any piece of code that isn't in the same file where `Mine` is defined. It isn't part of the global namespace.
 
 
 ## Pointers ##
@@ -166,8 +208,13 @@ Heap arrays
 
 ## Headers ##
 
+## Make ##
+
 ## Libraries ##
 
-## Make ##
+## Pseudo-OOP ##
+
+
+
 
 

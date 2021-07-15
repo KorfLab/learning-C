@@ -18,7 +18,7 @@ int main () {
 	i1.age = 54;
 	printf("%s is %d years old\n", i1.name, i1.age);
 	
-	Person i2; // typedef is a little simpler
+	Person i2; // typedef is a little tidier without saying 'struct'
 	strcpy(i2.name, "Joe Shmoe");
 	i2.age = 25;
 	printf("%s is %d years old\n", i2.name, i2.age);
