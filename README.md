@@ -20,14 +20,14 @@ An introduction to programming in C using example programs. It is assumed you've
 
 ## Setup ##
 
-You will need `git`, `gcc`', and `make` on your computer. If these are not installed, you will have to install them yourself.
+You will need `git`, `gcc`, and `make` on your computer. If these are not installed, you will have to install them yourself.
 
 1. Clone this repository to your computer. `git clone https://github.com/KorfLab/learning-C`
 2. Make a directory for yourself. Do all of your work inside that directory.
 
 ## Hello World ##
 
-Open your favorite editor and create the following program. You can find this program in the `templates` directory of the repository in case you would rather copy than type.
+Open your favorite editor and create the following program: `hello_world.c`. You can find this program in the `templates` directory of the repository in case you would rather copy than type.
 
 	#include <stdio.h>
 	int main() {
