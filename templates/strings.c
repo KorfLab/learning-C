@@ -33,7 +33,7 @@ int main() {
 	printf("%d == %d?\n", strlen(s3), sizeof(s3)); // and not as long
 	
 	// making interesting strings
-	char strbuff[64];                           // create a string buffer
+	char strbuff[64]; // create a string buffer
 	sprintf(strbuff, "%s %.3f", "PI-ish", 3.14159); // then sprintf()
 	printf("%s\n", strbuff);
 	
