@@ -11,6 +11,8 @@ An introduction to programming in C using example programs. It is assumed you've
 + Variables
 + Strings
 + Conditionals
++ Structs
++ Pointers
 + Arrays
 + Functions
 + File I/O
