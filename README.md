@@ -1,7 +1,7 @@
 learning-C
 ==========
 
-An introduction to programming in C using example programs.
+An introduction to programming in C using example programs. It is assumed you've done some programming in Python, Perl, Javascript, or some other modern programming language.
 
 ## Contents ##
 
@@ -11,7 +11,6 @@ An introduction to programming in C using example programs.
 + Variables
 + Strings
 + Conditionals
-+ Loops
 + Arrays
 + Functions
 + File I/O
@@ -81,5 +80,24 @@ Possibly the most important part of this program is to note that variables a, b,
 Try declaring some floating point variables and then print their values. You might be surprised at the results.
 
 So what should you do about variables with unknown contents? Should you set all of your variables equal to zero at the start of your program? Absolutely not. A program with random behavior is obviously a buggy program. However, if you set the variables to zero, it's probably still a buggy program but you can't tell because it doesn't have random behavior.
+
+## Strings ##
+
+Copy `templates/strings.c` to your directory. Read the text below, then compile and run the program. Then come back and read this again.
+
+Strings are arrays of characters. We will deal with arrays more later, but for now just accept that `char s[5]` creates enough room for a string with 4 letters and one string terminator.
+
+The most dangerous thing about strings, and arrays in general is that there's absolutely nothing stopping you from doing this:
+
+	char s[5];
+	s[50] = 'a';
+
+You have asked for 5 bytes to hold a string, s. However, the array syntax allows you to read or write memory well beyond the original bounds. This can cause catastrophic errors if you disturb other parts of memory. If this doesn't scare the shit out of you, you don't understand the problem.
+
+## Conditionals ##
+
+Copy `templates/conditionals.c` to your directory and try that out. Most of it should look pretty familiar to you. You may not have seen a `case` or `do` or `goto` statement before, but they aren't complicated.
+
+To get your fingers used to doing loops and conditionals in C, write the ubiquitous `fizzbuzz` program (output the numbers from 1 to 100, but if the number is divisible by 3 write fizz, divisible by 5 write buzz, divisible by both 3 and 5 fizzbuzz).
 
 
