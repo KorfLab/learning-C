@@ -15,6 +15,8 @@ Python is a great language for 95% of our programming needs. Sometimes it's not 
 + Arrays
 + Functions
 + The Global Namespace
++ Memory
++ Garbage Collection
 + Pointers
 + File I/O
 + CLI
@@ -204,9 +206,50 @@ One common use of the the preprocessor is to define macros that substitute text 
 
 Oh yeah, let's put everything we know so far in a program. Go get `global.c` from the `templates` directory and play with that.
 
-## Pointers ##
 
-We now come to the point where people either 
+## Memory ##
+
+Everything up to now should have been mostly familiar. But we're about to go off the chart and there be dragons out there...
+
+---
+
+Consider this simple function. It doesn't take any arguments and it doesn't return any values. However, each time it is called, it creates an array of size 1 kb.
+
+	void stack(void) {
+		char mme[1024];
+	}
+
+What happens to that memory after the function is called? Does it hang around? Or does it disappear. You can imagine that if it hangs around, then a program like the following would eventually use up all the memory in your computer.
+
+	int main() {
+		while (1) stack();
+	}
+
+Grab `templates/memory.c` and try it out. Make sure you have `top` or some other process manager running at the same time. You'll see that the memory usage of your program will not increase over time. To kill the program, use Control-C.
+
+All of the variables we've seen so far are allocated from the _stack_. Memory is created when you ask for it, and when the program execution leaves the function, the memory is returned. The stack is a first-in last-out queue. Because stack memory is always recycled, there is no way for stack memory to be returned from a function. You cannot create a random DNA sequence from stack memory and then return it to the `main()` function. That memory is gone as soon as you leave the function.
+
+There is another part of memory called the _heap_ and it is not a first-in last-out queue. It works like the filesystem on your hard disk. When you create files, they take up room permanently until you personally destory them. This next function allocates memory from the heap.
+
+	void heap(void) {
+		char *mem = malloc(sizeof(1000));
+	}
+
+What do you think will happen if you do the following?
+
+	int main() {
+		while (1) heap();
+	}
+
+Switch the comments around and try it and find out. But be ready with the ^C (that's how people often write Control-C).
+
+So how do you get rid of the memory? By manually releasing it with the `free()` function. If you don't `free()` memory, your computer will run out of RAM. If you `free()` the wrong piece of memory, your program will crash (or worse). Switch the comments around again and try the last piece of code in `memory.c`.
+
+## Garbage Collection ##
+
+How does Python (and many other modern languages) do garbage collection?
+
+## Pointers ##
 
 Pointers to scalars
 malloc() and free()
