@@ -12,10 +12,10 @@ Python is a great language for 95% of our programming needs. Sometimes it's not 
 + Strings
 + Conditionals
 + Structs
-+ Functions
-+ Scope
 + Arrays
 + Macros
++ Functions
++ Scope
 + Pointers
 + File I/O
 + CLI
