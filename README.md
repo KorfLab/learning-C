@@ -13,9 +13,8 @@ Python is a great language for 95% of our programming needs. Sometimes it's not 
 + Conditionals
 + Structs
 + Arrays
-+ Macros
 + Functions
-+ Scope
++ The Global Namespace
 + Pointers
 + File I/O
 + CLI
@@ -147,10 +146,6 @@ In Python, lists can contain variables of mixed types, but not in C. All of the 
 
 As we saw earlier with strings (which are arrays of type char terminated with `\0`), it is possible to accidentally access arrays beyond their final index. This is probably the most common type of catastrophic error.
 
-## Macros ##
-
-Not yet started
-
 ## Functions ##
 
 In Python, functions can return multiple values, but in C every function has at most one return value. For example, the `main()` function returns an integer.
@@ -169,20 +164,17 @@ So what happens if you want a function to return multiple values? For example, l
 
 There is another way, which is to send in memory locations to the function and have the function fill the variables. This violates my "functions don't have side-effects" rule. Passing memory addresses to functions is pure evil (even though it shows up in most textbooks).
 
-## Scope ##
+## The Global Namespace ##
 
-At some point in the too distant future, we will be compiling programs that contain multiple files. For example, let's imagine there is a library that defines functions for `sum()` and `product()`. We want to combine this with our program containing functions `max()` and `main()`.
+Before a C program is compiled, it goes through a preprocessor. This is its own mini language. You've already seen one preprocessor command before.
 
-+ some_library.c
-	+ int sum(int a, int b) return a + b;
-	+ int product(int a, int b) return a * b;
-+ program.c
-	+ int max(int a, int b) return a > b ? b : a;
-	+ int main() {...}
+	#include <stdio.h>
 
-In Python, each file has its own namespace. For example, you might do `some_library.sum()`. In C, there is no dot syntax that divides the namespace. In C, all of the functions are in the same global namespace. This means that each function needs a completely unique name. Consequently develoeprs often prefix their functions with their initials or some other identifying token. For example, if I wanted to make my own version of `printf()`, I might call it `ik_printf()` or if this was part of a larger biological sequences library I might call it `bs_printf()`.
+Statemets that begin with a # sign are read by the preprocessor. An `#include` statement says "open up the file and copy its entire contents here". What if different files define the same function name? In Python, each file has its own namespace. For example, you might do `some_library.sum()`, and this would not conflict with any other file that also defined a `sum()` function. In C, there is no dot syntax that divides the namespace. In C, all of the functions are in the same global namespace!
 
-You can also declare variables in the global namespace. But just like functions, they cannot have the same names as other variables (or functions for that matter). By convention, global variables should start with a capital letter. If you want to make a variable a constant, use the `const` keyword. By convention, it should also be in all capitals.
+To prevent namespace collisions, each function needs a completely unique name. Consequently develoeprs often prefix their functions with their initials or some other identifying token. For example, if I wanted to make my own version of `printf()`, I might call it `ik_printf()` or if this was part of a larger biological sequences library I might call it `bs_printf()`.
+
+Variables can also exist in the global namespace. But just like functions, they cannot have the same names as other variables (or functions for that matter). By convention, global variables should start with a capital letter. If you want to make a variable a constant, use the `const` keyword. By convention, it should also be in all capitals.
 
 	int GlobalVariable = 3;        // can be changed
 	const int GLOBAL_CONSTANT = 5; // cannot be changed
@@ -194,11 +186,27 @@ You can also declare variables in the global namespace. But just like functions,
 If you're worried about polluting the global namespace with your variables and functions (and you should be), you can make these private to a specific file with the keywords `static`.
 
 	static int Mine; // variable private to the file
-	static int whatever() {} // function private to the file 
+	static int also_mine() {} // function private to the file
+	int main() ...
 
-The variable `Mine` cannot be reached by any piece of code that isn't in the same file where `Mine` is defined. It isn't part of the global namespace. Functions like `whatever()` can have a similar behavior if they are declared `static`.
+The variable `Mine` and function `also_mine()` look like they are part of the global namespace, but they can't be accessed by code outside the file they are defined in (which doesn't have to be the file with `main()`).
+
+---
+
+One common use of the the preprocessor is to define macros that substitute text throughout a file. For example, let's say you want to declare an array with 100 elements. Later you decide that it should be 200. Do you want to go to all places in your code that had 100 and change them to 200? No, instead you can use a macro.
+
+	#define ARRAYSIZE 100
+
+	int array[ARRAYSIZE]
+	for (int i = 0; i < ARRAYSIZE; i++) ...
+
+---
+
+Oh yeah, let's put everything we know so far in a program. Go get `global.c` from the `templates` directory and play with that.
 
 ## Pointers ##
+
+We now come to the point where people either 
 
 Pointers to scalars
 malloc() and free()
