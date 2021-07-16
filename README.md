@@ -15,6 +15,7 @@ Python is a great language for 95% of our programming needs. Sometimes it's not 
 + Functions
 + Scope
 + Arrays
++ Macros
 + Pointers
 + File I/O
 + CLI
@@ -146,6 +147,10 @@ In Python, lists can contain variables of mixed types, but not in C. All of the 
 
 As we saw earlier with strings (which are arrays of type char terminated with `\0`), it is possible to accidentally access arrays beyond their final index. This is probably the most common type of catastrophic error.
 
+## Macros ##
+
+Not yet started
+
 ## Functions ##
 
 In Python, functions can return multiple values, but in C every function has at most one return value. For example, the `main()` function returns an integer.
@@ -188,9 +193,10 @@ You can also declare variables in the global namespace. But just like functions,
 
 If you're worried about polluting the global namespace with your variables and functions (and you should be), you can make these private to a specific file with the keywords `static`.
 
-	static int Mine; // global and private to the file
+	static int Mine; // variable private to the file
+	static int whatever() {} // function private to the file 
 
-The variable `Mine` cannot be reached by any piece of code that isn't in the same file where `Mine` is defined. It isn't part of the global namespace.
+The variable `Mine` cannot be reached by any piece of code that isn't in the same file where `Mine` is defined. It isn't part of the global namespace. Functions like `whatever()` can have a similar behavior if they are declared `static`.
 
 ## Pointers ##
 
