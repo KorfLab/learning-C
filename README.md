@@ -21,9 +21,8 @@ Python is a great language for 95% of our programming needs. Sometimes it's not 
 + File I/O
 + CLI
 + Headers
-+ Make
-+ Libraries
 + Pseudo-OOP
++ Make
 
 ## Setup ##
 
@@ -241,21 +240,114 @@ What do you think will happen if you do the following?
 		while (1) heap();
 	}
 
-Switch the comments around and try it and find out. But be ready with the ^C (that's how people often write Control-C).
+Switch the comments around and try it to find out. But be ready with the ^C (that's how people often write Control-C).
 
 So how do you get rid of the memory? By manually releasing it with the `free()` function. If you don't `free()` memory, your computer will run out of RAM. If you `free()` the wrong piece of memory, your program will crash (or worse). Switch the comments around again and try the last piece of code in `memory.c`.
 
 ## Garbage Collection ##
 
-How does Python (and many other modern languages) do garbage collection?
+How does Python (and many other modern languages) manage memory? That is, how does Python make sure that some variables get cleaned up and others do not? Consider the following two Python functions.
+
+	def f1:
+		a = "hello";
+	
+	def f2:
+		a = "hello";
+		return "hello";
+
+Now let's imagine running these in an infinte loop.
+
+	while True:
+		f1()
+
+Does `f1()` cause your computer to run out of memory? No.
+
+	while True:
+		thing = f2()
+
+Does `f2()` cause your computer to run out of memory? Also no. And yet memory did get returned and stuck into `thing`.
+
+What happened, invisibly, is that each time through the `while` loop, `thing` goes out of scope, and the memory that was originally created in `f2()` now gets garbage collected. In Python, every piece of memory has a "reference count". In `f1()`, when `a` gets associated with the memory of `hello`, the memory has a reference count of 1. When execution leaves the function, the count goes to 0 and the memory is freed. In `f2()` the return statement increases the reference count by 1. So even though `a` goes out of scope, reducing the reference count by 1, the memory still has a reference count of 1. When `thing` finally goes out of scope, the reference count goes to zero and the memory is freed. Does this mean its impossible to have a memory leak in Python. No. Here's how to make a Python program use all your memory.
+
+	stuff = []
+	while True:
+		stuff.append(f2())
+	
+Each time `f2()` is called, the memory gets put on an array. The memory won't get freed until the entire array goes out of scope.
 
 ## Pointers ##
 
-Pointers to scalars
-malloc() and free()
-Stack vs. heap
-Pointers as arrays
-Pointers to structs
+We are now at the point of our adventures in C where some of our intrepid group will want to run screaming. Pointers are scary to some people. To declare a variable as a pointer, you prepend it with a `*`.
+
+	char c = 'A'; // a variable containing 1 byte - the letter A
+	char *p;      // a pointer to a character
+
+A pointer is a variable that can hold a memory address. How big is a memory address? It depends if you are using a 32-bit or 64-bit OS. So, either 4 or 8 bytes.
+
+	printf("%lu\n", sizeof(p)); // probably 8
+
+Let's make sure we get this straight in our heads. The variable takes up 1 byte but if you want to find its memory address, that takes 8 bytes.
+
+OK, so here's exactly where the fun begins. The ampersand `&` gives the memory address of a variable. Not the contents of the variable, but the address.
+
+	p = &c; // p now contains the memory address of c
+	printf("contents: %c, address: %lu\n", c, p);
+
+A pointer lets you access the memory directly, without going through the variable's name.
+
+	*p = 'B';
+	printf("contents: %c, address: %lu\n", c, p);
+
+In C, when you pass a variable to a function, it makes a copy of the variable. This is known as pass by value. As a result, the following function does nothing. The character passed into the function is a copy of some letter. When you change the letter, it doesn't change the original.
+
+	void f1(char c) {
+		c = 'C';
+	}
+
+When you pass a pointer to a function, you get a copy of the memory address. But  you can use that address to modify the contents of the original variable.
+
+	void f2(char *c) {
+		*c = 'C';
+	}
+
+Play with the `pointers.c` file for a bit and then come back for the next part of pointers.
+
+---
+
+One of the most important reason to use pointers is to create arrays. Let's review how to make an array from the stack.
+
+	int s1[5];
+
+So easy. What if you want to return that array from a function? That can't be 
+done from the stack. Instead, you have to create an array from the heap. It's surprisingly easy. All you have to do is as `malloc()` to give you the correct amount of memory.
+
+	int *h1 = malloc(5 * sizeof(int));
+
+Now you can read and write to `h1` as an array with the typical square bracket syntax. At `h1[0]` you are accessing the first int-sized piece of memory. At `h1[1]` you are accessing the second int-sized piece of memory.
+
+	for (int i = 0; i < 5; i++) h1[i] = i;
+
+At some point, you will want to clear the memory associated with the heap array.
+
+	free(h1); // eventually
+
+It's not so simple when you get to 2 dimensions. Again, let's see the stack implementation first.
+
+	int s2[4][3];
+
+To make a 2D array on the heap, you first have to allocate an array of pointers, and then allocate an array of values for each of the pointers.
+
+	int **h2 = malloc(4 * sizeof(int*)); // first dimension
+	for (int i = 0; i < 4; i++) {
+		h2[i] = malloc(3 * sizeof(int)); // second dimension
+	}
+
+Reading and writing from stack-based and heap-based arrays is exactly the same. Once you're done with a heap array, you have to free both the rows and columns.
+
+	for (int i = 0; i < 4; i++) free(h2[i]); // free rows
+	free(h2); // free columns
+
+So this is all probably sounding like a huge pain in the ass. It is. But it gets worse. What if you decide you want to make the array bigger? You cannot `append()` to heap-based arrays any more than you can stack-based arrays. Instead, you have to create a new array larger than your current array, copy everything over to the new array, and then free the old memory.
 
 ## File I/O ##
 
@@ -263,9 +355,6 @@ Pointers to structs
 
 ## Headers ##
 
-## Make ##
-
-## Libraries ##
-
 ## Pseudo-OOP ##
 
+## Make ##
