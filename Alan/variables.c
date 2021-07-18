@@ -6,7 +6,7 @@ int main() {
 	int b, c;  // declaring multiple variables of the same type
 	int d = 0; // declarating and assigning at the same time
 	float e;
-	printf("%d %d %d %d %lf\n", a, b, c, d, e); // %d for digit
+	printf("%d %d %d %d \n", a, b, c, d); // %d for digit
 	
 	// char is a character and also an 8-bit integer
 	char nt = 'A'; // single characters are in single quotes
