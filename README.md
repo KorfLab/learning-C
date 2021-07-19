@@ -419,7 +419,7 @@ Once the named parameters are parsed, the reamining positional parameters can be
 		printf("positional: %s\n", argv[i]);
 	}
 
-Unlike Python's ArgParse, you have to do the usage statement formatting yourself. Take a look at the `cli.c` program.
+Unlike Python's argparse, you have to do the usage statement formatting yourself. Take a look at the `cli.c` program.
 
 ## Headers ##
 
