@@ -423,14 +423,47 @@ Unlike Python's ArgParse, you have to do the usage statement formatting yourself
 
 ## Headers ##
 
-So far, we haven't used any 
+Previously, we've included heaer files into our programs like so:
+
+	#include <stdio.h>
+
+Where exactly is the file `stdio.h` located? Buried in your operating system somewhere. When using the `<>` syntax, the compiler knows to look in the _usual_ places. But you can also define your own header files with your own code?
+
+But what _exactly_ is a header file? It contains the definitions for compiled code stored elsewhere, but usually not any operational code. For simplicity, we'll make a header file called `myheader.h` that has actual code in it.
+
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	void hello_world(void) {
+		printf("hello world\n");
+	}
+
+Now we'll include everything from the header into our program with `main()`.
+
+	#include "myheader.h"
+	int main(int argc, char **argv) {
+		hello_world();
+	}
+
+The header file is basically our own custom library. However, we don't usually put code into a header file. Instead we compile object files and link those into our program with `main()` later. Just go to the next section.
 
 ## Pseudo-OOP ##
 
-Everything is a pointer to a struct
+In order to maintain my own sanity, I have some very strict rules for programming in C.
+
+1. Objects are pointers to structs
+2. All objects are allocated with constructors
+3. All objects are freed by destructors
+4. Functions never have side-effects
+
+Let's make an an object definition in a header file.
+
+Next, let's make the actual source code in a source file.
+
+We can now use the object from a program file.
 
 ## Make ##
 
-Manage you build
+Manage your builds
 
 
