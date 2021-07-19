@@ -347,14 +347,90 @@ Reading and writing from stack-based and heap-based arrays is exactly the same. 
 	for (int i = 0; i < 4; i++) free(h2[i]); // free rows
 	free(h2); // free columns
 
-So this is all probably sounding like a huge pain in the ass. It is. But it gets worse. What if you decide you want to make the array bigger? You cannot `append()` to heap-based arrays any more than you can stack-based arrays. Instead, you have to create a new array larger than your current array, copy everything over to the new array, and then free the old memory.
+So this is all probably sounding like a huge pain in the ass. It is. But it gets worse. What if you decide you want to make the array bigger? You cannot `append()` to heap-based arrays any more than you can stack-based arrays. Instead, you have to create a new array larger than your current array, copy everything over to the new array, and then free the old memory. 
 
 ## File I/O ##
 
+Reading files is a little more complicated than in Python. You can read byte-by-byte or line-by-line. Below is the canonical way to read line-by-line. Note that `*line` must be initialized to `NULL` before calling `getline()` (unless you want to allocate your own buffer). If you want to save parts of the input, you will have to copy them to other variables, as the memory underlying `line` gets garbage collected.
+
+	FILE *fp;
+	char *line = NULL;
+	size_t len;
+	ssize_t read;
+	
+	/* part 1: read a file line-by-line */
+	fp = fopen("hello_world.c", "r");
+	while ((read = getline(&line, &len, fp)) != -1) {
+		printf("read %zu bytes: %s", read, line);
+	}
+	fclose(fp);
+	if (line) free(line);
+
+Writing a file is pretty simple: call `fopen()` with the write flag and then use `fprintf()` to write to the file pointer.
+
+	/* part 2: write a file */
+	fp = fopen("testout.txt", "w");
+	fprintf(fp, "hello file\n");
+	fclose(fp);
+
 ## CLI ##
+
+The command line interface is sort of messy. Up until now, we haven't used the fact that `main()` has command line arguments, but it does. `argc` is the number of arguments and `argv` is an array of strings on the command line. `argv[0]` is the name of the program.
+
+	int main(int argc, char *argv[]) {...}
+
+Let's imagine we are writing an entropy filter called `dust` and we want the program to have the following usage statement.
+
+	usage: dust <fasta file>\n\
+	  -w <int>   window size [11]\n\
+	  -t <float> threshold [1.1]\n\
+	  -n         mask with Ns (lowercase default)\n\
+	  -h         this message";
+
+The program takes one positional argument, a fasta file, and several one-letter options. Processing the command requires a call to `getopt()` with a funny syntax.
+
+	getopt(argc, argv, "w:t:nh"))
+
+A letter followed by a colon is a signal that the option has an argument. If there is no colon, the option has no arguments. Look at the usage statement above and then the string "w:t:nh" and it should make sense.
+
+Processing the entire command line happens in 2 steps. First, the named parameters are pulled from the command line in some kind of a loop.
+
+	while ((opt = getopt(argc, argv, "w:t:nh")) != -1) {
+		switch (opt) {
+			case 'w':
+				window = atoi(optarg);
+				break;
+			case 't':
+				threshold = atof(optarg);
+				break;
+			case 'n':
+				lowercase = 0;
+				break;
+			case 'h':
+				fprintf(stderr, "%s\n%s\n", argv[0], help);
+				exit(1);
+		}
+	}
+
+Once the named parameters are parsed, the reamining positional parameters can be harvested from the command line.
+
+	// positional arguments
+	for (int i = optind; i < argc; i++) {
+		printf("positional: %s\n", argv[i]);
+	}
+
+Unlike Python's ArgParse, you have to do the usage statement formatting yourself. Take a look at the `cli.c` program.
 
 ## Headers ##
 
+So far, we haven't used any 
+
 ## Pseudo-OOP ##
 
+Everything is a pointer to a struct
+
 ## Make ##
+
+Manage you build
+
+
