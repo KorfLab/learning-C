@@ -456,14 +456,105 @@ In order to maintain my own sanity, I have some very strict rules for programmin
 3. All objects are freed by destructors
 4. Functions never have side-effects
 
-Let's make an an object definition in a header file.
+Let's make an an object definition in a header file `biosequence.h`.
 
-Next, let's make the actual source code in a source file.
+	struct biosequence {
+		int   len;
+		char *def;
+		char *seq;
+	};
+	typedef struct biosequence* BioSeq;
 
-We can now use the object from a program file.
+	void   bs_free(BioSeq);
+	BioSeq bs_new(const char*, const char*);
+	void   bs_print(const BioSeq);
+	void   bs_set_line_length(int);
+
+Next, let's make the actual source code in a source file: `biosequence.c`.
+
+	static int LINE_LENGTH = 80;
+
+	void bs_set_line_length(int length) {
+		LINE_LENGTH = length;
+	}
+
+	void bs_free(BioSeq bs) {
+		free(bs->def);
+		free(bs->seq);
+		bs->def = NULL;
+		bs->seq = NULL;
+	}
+
+	BioSeq bs_new(const char *def, const char *seq) {
+		BioSeq bs = malloc(sizeof(struct biosequence));
+		bs->def = malloc(strlen(def) + 1);
+		bs->seq = malloc(strlen(seq) + 1);
+		bs->len = strlen(seq);
+		strcpy(bs->def, def);
+		strcpy(bs->seq, seq);
+		return bs;
+	}
+
+	void bs_print(const BioSeq bs) {
+		printf(">%s\n", bs->def);
+		for (int i = 0; i < bs->len; i++) {
+			putc(bs->seq[i], stdout);
+			if ((i+1) % LINE_LENGTH == 0) printf("\n");
+		}
+		if (bs->len % LINE_LENGTH != 0) printf("\n");
+	}
+
+Now let's create a program with a `main()` function that can create and manipulate objects described in the header file and implemented in the source file. We'll call the file `demo.c`.
+
+	#include "biosequence.h"
+
+	int main(int argc, char **argv) {
+		BioSeq s1 = bs_new("EcoRI", "GAATTC");
+		bs_set_line_length(3);
+		bs_print(s1);
+		bs_free(s1);
+	}
+
+To compile this all together takes 2 steps. First, we have to compile the library into an object file: `biosequence.o`.
+
+	gcc -c biosequence.c
+
+Next, we compile the `demo.c` file as we did before. Except this time we will also include the object file on the command line.
+
+	gcc demo.c biosequence.o
 
 ## Make ##
 
-Manage your builds
+Imagine compiling many files individually and then mashing them all together in the end. Doesn't sound like fun. That's where `make` comes in. A `Makefile` contains instructions for how to build all the intermediate products as well as the final program. Makefiles also tend to have installation and testing routines in them.
+
+At the top of a Makefile we put some definitions. CFLAGS is whatever extra instructions we want to send to the compiler. For example, let's turn on as many warnings as possible and make all warnings into errors.
+
+	CFLAGS = -Wall -Werror
+	OBJECTS = biosequence.o
+
+In this section, we also define the name of our program, it's source file, and object file. Note that there are MANY ways of writing Makefiles, and I'm just showing you my method.
+
+	APP = demo
+	OBJ = demo.o
+
+The next section of a Makefile is the targets. Usually one just types `make` and the software builds. But you might also want to do `make clean` to remove all of the compiled files or `make test` to test your software. You might also build more than one application at a time.
+
+The `CC` variable is predefined. It's your C compiler (usually gcc).
+
+	default:
+		make $(APP)
+
+	$(APP): $(OBJ) $(OBJECTS)
+		$(CC) -o $(APP) $(OBJ) $(OBJECTS)
+
+	clean:
+		rm -f *.o $(APP)
+
+The last section of a Makefile is the inference rules. This allows you to compile every .c file into a .o file instead of specifiying every file individually.
+
+	%.o: %.c
+		$(CC) $(CFLAGS) -c -o $@ $<
+
+
 
 
