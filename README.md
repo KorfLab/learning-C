@@ -525,14 +525,14 @@ Next, we compile the `demo.c` file as we did before. Except this time we will al
 
 ## Make ##
 
-Imagine compiling many files individually and then mashing them all together in the end. Doesn't sound like fun. That's where `make` comes in. A `Makefile` contains instructions for how to build all the intermediate products as well as the final program. Makefiles also tend to have installation and testing routines in them.
+Imagine compiling many files individually and then mashing them all together in the end. Doesn't sound like fun. That's where `make` comes in. A `Makefile` contains instructions for how to build all the intermediate products as well as the final program. Makefiles also tend to have installation and testing routines in them. Note that there are MANY ways of writing Makefiles, and I'm just showing you my method.
 
 At the top of a Makefile we put some definitions. CFLAGS is whatever extra instructions we want to send to the compiler. For example, let's turn on as many warnings as possible and make all warnings into errors.
 
 	CFLAGS = -Wall -Werror
 	OBJECTS = biosequence.o
 
-In this section, we also define the name of our program, it's source file, and object file. Note that there are MANY ways of writing Makefiles, and I'm just showing you my method.
+In this section, we also define the name of our program and object file.
 
 	APP = demo
 	OBJ = demo.o
@@ -555,6 +555,4 @@ The last section of a Makefile is the inference rules. This allows you to compil
 	%.o: %.c
 		$(CC) $(CFLAGS) -c -o $@ $<
 
-
-
-
+You will find `biosequence.h`, `biosequence.c`, `demo.c`, and `Makefile` in the `templates` directory as usual.
