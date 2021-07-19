@@ -24,7 +24,7 @@ int main () {
 	printf("%s is %d years old\n", i2.name, i2.age);
 	
 	// how big is a struct?
-	printf("%d %d\n", (int)sizeof(Person), (int)sizeof(i2));
+	printf("%d %d %d\n", (int)sizeof(Person), (int)sizeof(i2), (int)sizeof(i1));
 	
 	Person i3;
 	printf("%s is %d years old\n", i3.name, i3.age); // uninitialized...

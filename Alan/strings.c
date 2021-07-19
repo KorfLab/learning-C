@@ -22,15 +22,15 @@ int main() {
 	// go back and think about what printf("%s", s1) does...
 	
 	// use strlen() to get length, and sizeof() to get memory footprint
-	printf("len:%d size:%d\n", strlen(s2), sizeof(s2));
+	printf("len:%lu size:%lu\n", strlen(s2), sizeof(s2));
 	
 	// what happens if you try to go beyond 10 characters?
-	s2[12] = 'b'; // possibly nothing, possibly the end of the world
+	//s2[12] = 'b'; // possibly nothing, possibly the end of the world
 	// stop and consider if you really want to program in C
 	
 	// another way to create a string is with a pointer (star symbol)
 	char *s3 = "ACGT"; // strings created like this are read-only
-	printf("%d == %d?\n", strlen(s3), sizeof(s3)); // and not as long
+	printf("%d == %d?\n", (int)strlen(s3), (int)sizeof(s3)); // and not as long
 	
 	// making interesting strings
 	char strbuff[64]; // create a string buffer
