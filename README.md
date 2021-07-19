@@ -381,11 +381,11 @@ The command line interface is sort of messy. Up until now, we haven't used the f
 
 Let's imagine we are writing an entropy filter called `dust` and we want the program to have the following usage statement.
 
-	usage: dust <fasta file>\n\
-	  -w <int>   window size [11]\n\
-	  -t <float> threshold [1.1]\n\
-	  -n         mask with Ns (lowercase default)\n\
-	  -h         this message";
+	usage: dust <fasta file>
+	  -w <int>   window size [11]
+	  -t <float> threshold [1.1]
+	  -n         mask with Ns (lowercase default)
+	  -h         this message
 
 The program takes one positional argument, a fasta file, and several one-letter options. Processing the command requires a call to `getopt()` with a funny syntax.
 
