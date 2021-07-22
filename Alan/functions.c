@@ -10,7 +10,7 @@ static float sumf(float a, float b) {
 	return a + b;
 }
 
-static void malloc2(void) {
+static void malloc1(void) {
 	printf("fooled you\n");	
 }
 
@@ -20,14 +20,15 @@ static const int VAR = 3; // a constant in global scope
 
 int main() {
 	// functions have specific types of inputs and outputs
-	printf("sum: %d\n", sumi(1, 3));
+	printf("sum: %d\n", sumi(1.2, 3));
 	printf("sum: %.2f\n", sumf(1.1, 3.1));
 	
 	printf("before: %d\n", Var);
 	Var = 4;
 	printf("after: %d\n", Var);
+	printf("VAR = %d\n", VAR);
 	//VAR = 4; // no, you can't do this
 	
-	malloc2();
+	malloc1();
 }
 

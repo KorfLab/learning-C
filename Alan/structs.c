@@ -23,9 +23,14 @@ int main () {
 	i2.age = 25;
 	printf("%s is %d years old\n", i2.name, i2.age);
 	
+	Person i3;
+	strcpy(i3.name, "Alan Zhang");
+	//i3.name = "Alan Zhang"; 
+	i3.age = 21;
+	printf("%s is %d years old\n", i3.name, i3.age);
 	// how big is a struct?
 	printf("%d %d %d\n", (int)sizeof(Person), (int)sizeof(i2), (int)sizeof(i1));
 	
-	Person i3;
-	printf("%s is %d years old\n", i3.name, i3.age); // uninitialized...
+	Person i4;
+	printf("%s is %d years old\n", i4.name, i4.age); // uninitialized...
 }
