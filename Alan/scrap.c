@@ -29,6 +29,14 @@ int main(){
 	free(food1->name);
 	food1->name = NULL;
 	free(food1);
+	
+	char *string = malloc(3 * sizeof(char));
+	string[1] = 'a';
+	string[0] = 'b';
+	for(int i = 0; i < 2; i++) {
+		printf("%c ", string[i]);
+	}
+	printf("\n");
 }
 
 

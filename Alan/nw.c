@@ -28,14 +28,8 @@ void free_cell(Cell the_cell){
 }
 */
 
-void print_matrix(int l1, int l2) {
-	printf("Hello world\n");
-	for(int i = 0; i < l1; i++) {
-		for(int j = 0; j < l2; j++) {
-			printf("i = %d, j = %d, s = %d, trace = %c\n", i, j, 				matrix[i][j].score, matrix[i][j].trace);
-		}
-	}
-}
+void print_matrix(int l1, int l2);
+int max(int array[]);
 
 int main(int argc, char **argv) {
 	
@@ -45,11 +39,13 @@ int main(int argc, char **argv) {
 	
 	char *s1 = argv[1];
 	char *s2 = argv[2];
+	int l1 = strlen(s1);
+	int l2 = strlen(s2);
 	
 	for(int i = 0; i < 100; i++) {
 		for(int j = 0; j < 100; j++) {
 			matrix[i][j].score = 0;
-			matrix[i][j].trace = 'a';
+			matrix[i][j].trace = 'N';
 		}
 	}
 	
@@ -64,11 +60,128 @@ int main(int argc, char **argv) {
 		matrix[0][j].trace = 'U';
 	}
 	
+	//fill
+	for(int i = 0; i <= l1; i++) {
+		for(int j = 0; j <= l2; j++) {
+			//current cell is matrix[i+1][j+1]
+			int left = matrix[i+1][j].score + gap;
+			int up = matrix[i][j+1].score + gap;
+			int diag = (s1[i]==s2[j])? 
+			matrix[i][j].score + match :
+			matrix[i][j].score + mismatch;
+			
+			int path[3] = {left, up, diag};
+			matrix[i+1][j+1].score = max(path); 
+
+			
+			if(matrix[i+1][j+1].score == left) matrix[i+1][j+1].trace = 'L';
+			if(matrix[i+1][j+1].score == up  ) matrix[i+1][j+1].trace = 'U';
+			if(matrix[i+1][j+1].score == diag) matrix[i+1][j+1].trace = 'D';
+			
+		}
+	}
 	
-	print_matrix(3,3);
-	printf("%s, %s\n", s1, s2);
+	//trace back
+	int l3 = 0;
+	int r = l1;
+	int c = l2;
+	while(r!=0) {
+		if(matrix[r][c].trace=='L') {
+			c-=1;
+			l3+=1;
+		}
+		else {
+			if(matrix[r][c].trace=='U') {
+				r-=1;
+				l3+=1;
+			}
+			else {
+				c-=1;
+				r-=1;
+				l3+=1;
+			}
+		}	
+	}
+	
+	char *matched_s1 = malloc(l3 * sizeof(char));
+	char *matched_s2 = malloc(l3 * sizeof(char));
+	
+	r = l1;
+	c = l2;
+	int counter = l3;
+	//printf("r = %d, c = %d\n", r, c);
+	while(r!=0) {
+		if(matrix[r][c].trace=='L') {
+			matched_s1[counter-1] = '-';
+			matched_s2[counter-1] = s2[c-1];
+			c -= 1;
+			counter -= 1;
+			//printf("r = %d, c = %d, l3 = %d\n", r, c, counter);
+		}
+		else {
+			if(matrix[r][c].trace=='U') {
+				matched_s1[counter-1] = s1[r-1];
+				matched_s2[counter-1] = '-';
+				r -= 1;
+				counter -= 1;
+				//printf("r = %d, c = %d, l3 = %d\n", r, c, counter);
+			}
+			else {
+				matched_s1[counter-1] = s1[r-1];
+				matched_s2[counter-1] = s2[c-1];
+				c -= 1;
+				r -= 1;
+				counter -= 1;
+				//printf("r = %d, c = %d, l3 = %d\n", r, c, counter);
+		
+			}	
+		}
+	}
+	
+		
+	//print_matrix(l1,l2);
+	
+	for(int i = 0; i < l3; i++) {
+		printf("%c ", matched_s1[i]);
+	}
+	printf("\n");
+	for(int j = 0; j < l3; j++) {
+		printf("%c ", matched_s2[j]);
+	}
+	printf("\n");
+	
 	
 	
 }
 
+int max(int array[]) {
+	int max = array[0];
+	for(int i = 0; i < 3; i++) {
+		if (array[i] > max) max = array[i];
+	}
+	return max;
+}
+
+void print_matrix(int l1, int l2) {
+	/*
+	for(int i = 0; i <= l1; i++) {
+		for(int j = 0; j <= l2; j++) {
+			printf("i = %d, j = %d, s = %d, trace = %c\n", i, j, 				matrix[i][j].score, matrix[i][j].trace);
+		}
+	}*/
+	
+	for(int i = 0; i <= l1; i++) {
+		for(int j = 0; j <= l2; j++) {
+			printf("%d	", matrix[i][j].score);
+		}
+		printf("\n");
+	}
+	printf("\n");
+	for(int i = 0; i <= l1; i++) {
+		for(int j = 0; j <= l2; j++) {
+			printf("%c	", matrix[i][j].trace);
+		}
+		printf("\n");
+	}
+}
 
