@@ -1,7 +1,9 @@
-C for Python programmers
-========================
+Learning C
+==========
 
-Python is a great language for 95% of our programming needs. Sometimes it's not fast enough, and for those times there is C. This repo chronicles the "adventures in C" of the Korf Lab in the Summer of 2021.
+## Assumptions ##
+
+It is assumed you already know some Unix and Python.
 
 ## Contents ##
 
